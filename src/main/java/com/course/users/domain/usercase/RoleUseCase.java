@@ -1,8 +1,8 @@
-package com.curso.usuarios.domain.usercase;
+package com.course.users.domain.usercase;
 
-import com.curso.usuarios.domain.api.IRoleServicePort;
-import com.curso.usuarios.domain.model.Role;
-import com.curso.usuarios.domain.spi.IRolePersistencePort;
+import com.course.users.domain.api.IRoleServicePort;
+import com.course.users.domain.model.Role;
+import com.course.users.domain.spi.IRolePersistencePort;
 
 import java.util.List;
 

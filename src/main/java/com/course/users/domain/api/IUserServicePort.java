@@ -1,10 +1,10 @@
-package com.curso.usuarios.domain.spi;
+package com.course.users.domain.api;
 
-import com.curso.usuarios.domain.model.User;
+import com.course.users.domain.model.User;
 
 import java.util.List;
 
-public interface IUserPersistencePort {
+public interface IUserServicePort {
 
     void saveUser(User user);
 

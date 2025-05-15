@@ -1,4 +1,4 @@
-package com.curso.usuarios.domain.model;
+package com.course.users.domain.model;
 
 
 import java.util.Date;
@@ -8,7 +8,7 @@ public class User {
     private long id;
     private String name;
     private String lastName;
-    private int documentNumber;
+    private String documentNumber;
     private String phone;
     private Date birthdate;
     private String email;
@@ -18,7 +18,7 @@ public class User {
     public User() {
     }
 
-    public User(long id, String name, String lastName, int documentNumber, String phone, Date birthdate, String email, String password, int idRole) {
+    public User(long id, String name, String lastName, String documentNumber, String phone, Date birthdate, String email, String password, int idRole) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
@@ -54,11 +54,11 @@ public class User {
         this.lastName = lastName;
     }
 
-    public int getDocumentNumber() {
+    public String getDocumentNumber() {
         return documentNumber;
     }
 
-    public void setDocumentNumber(int documentNumber) {
+    public void setDocumentNumber(String documentNumber) {
         this.documentNumber = documentNumber;
     }
 

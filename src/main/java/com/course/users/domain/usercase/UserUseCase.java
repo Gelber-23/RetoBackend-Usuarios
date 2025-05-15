@@ -1,8 +1,8 @@
-package com.curso.usuarios.domain.usercase;
+package com.course.users.domain.usercase;
 
-import com.curso.usuarios.domain.api.IUserServicePort;
-import com.curso.usuarios.domain.model.User;
-import com.curso.usuarios.domain.spi.IUserPersistencePort;
+import com.course.users.domain.api.IUserServicePort;
+import com.course.users.domain.model.User;
+import com.course.users.domain.spi.IUserPersistencePort;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.curso.usuarios.domain.model;
+package com.course.users.domain.model;
 
 public class Role {
     private int id;

@@ -1,13 +1,10 @@
-package com.curso.usuarios.domain.api;
+package com.course.users.domain.spi;
 
-
-import com.curso.usuarios.domain.model.Role;
+import com.course.users.domain.model.Role;
 
 import java.util.List;
 
-public interface IRoleServicePort {
-
-
+public interface IRolePersistencePort {
     void saveRole(Role role);
 
     Role getRoleById(int id);
