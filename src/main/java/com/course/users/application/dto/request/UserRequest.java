@@ -21,7 +21,7 @@ public class UserRequest {
 
     @NotBlank(message = "Document is required")
     @Size(min = 7, max = 10, message = "The document must have between 7 and 10 characters")
-    @Pattern(regexp = "^[A-Z0-9]+$", message = "The document must only contain capital letters and numbers, without spaces.")
+    @Pattern(regexp = "^\\d+$", message = "The document must only contain numbers")
     private String documentNumber;
 
 
