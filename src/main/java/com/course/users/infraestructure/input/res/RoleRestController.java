@@ -30,7 +30,7 @@ public class RoleRestController {
     @Operation(summary = "Add a new role")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Role created", content = @Content),
-            @ApiResponse(responseCode = "409", description = "Role already exists", content = @Content)
+            @ApiResponse(responseCode = "400", description = "Validation errors", content = @Content)
     })
     @PostMapping()
     public ResponseEntity<Void> saveRole (@Valid @RequestBody RoleRequest roleRequest) {
@@ -41,7 +41,7 @@ public class RoleRestController {
     @Operation(summary = "Get role by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Role found", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Role not found", content = @Content)
+            @ApiResponse(responseCode = "400", description = "Validation errors", content = @Content)
     })
     @GetMapping("{id}")
     public ResponseEntity<RoleResponse> getRoleById(@PathVariable(value = "id") int id) {

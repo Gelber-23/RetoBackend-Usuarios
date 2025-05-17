@@ -1,5 +1,6 @@
 package com.course.users.application.dto.request;
 
+import com.course.users.application.dto.request.validator.Adult;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,10 +27,11 @@ public class UserRequest {
 
 
     @NotBlank(message = "Phone is required")
-    @Pattern(regexp = "^\\+?\\d{13,18}$", message = "The phone number must contain only digits and can start with '+'.")
+    @Pattern(regexp = "^\\+?\\d{10,18}$", message = "The phone number must contain only digits and can start with '+' and must contain between 10 and 18 characters.")
     private  String phone;
 
-    @NotBlank(message = "Birth Date is required")
+    @NotNull(message = "Birth Date is required")
+    @Adult(message = "Must be at least 18 years old")
     private Date birthdate;
 
     @NotBlank(message = "Email is required")

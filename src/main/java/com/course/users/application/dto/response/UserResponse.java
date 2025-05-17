@@ -10,6 +10,7 @@ import java.util.Date;
 @Setter
 public class UserResponse {
 
+    private Long id;
     private String name;
 
     private String lastName;

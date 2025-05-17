@@ -21,6 +21,7 @@ public interface UserResponseMapper {
 
     RoleDtoMapper INSTANCE = Mappers.getMapper(RoleDtoMapper.class);
 
+    @Mapping(target = "id", source = "user.id")
     @Mapping(target = "name", source = "user.name")
     @Mapping(target = "lastName", source = "user.lastName")
     @Mapping(target = "documentNumber", source = "user.documentNumber")
