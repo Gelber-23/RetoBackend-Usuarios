@@ -32,7 +32,7 @@ public class UserRestController {
     @Operation(summary = "Add a new user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "User created", content = @Content),
-            @ApiResponse(responseCode = "409", description = "User already exists", content = @Content)
+            @ApiResponse(responseCode = "400", description = "Validation errors", content = @Content)
     })
     @PostMapping()
     public ResponseEntity<Void> saveUser (@Valid @RequestBody UserRequest userRequest) {
@@ -43,7 +43,7 @@ public class UserRestController {
     @Operation(summary = "Get user by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User found", content = @Content),
-            @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
+            @ApiResponse(responseCode = "400", description = "Validation errors", content = @Content)
     })
     @GetMapping("{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable(value = "id") Long id) {

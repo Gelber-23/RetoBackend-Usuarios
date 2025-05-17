@@ -10,6 +10,7 @@ import com.course.users.domain.api.IRoleServicePort;
 import com.course.users.domain.api.IUserServicePort;
 import com.course.users.domain.model.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,10 +28,12 @@ public class UserHandler implements IUserHandler {
     private final UserRequestMapper userRequestMapper;
     private final UserResponseMapper userResponseMapper;
     private final RoleDtoMapper roleDtoMapper;
-
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void saveUser(UserRequest userRequest) {
+        String encryptedPassword = passwordEncoder.encode(userRequest.getPassword());
+        userRequest.setPassword(encryptedPassword);
         User user = userRequestMapper.toUser(userRequest);
         userServicePort.saveUser(user);
     }
