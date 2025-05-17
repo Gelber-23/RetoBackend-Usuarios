@@ -26,6 +26,7 @@ repositories {
 ext {
 	mapStruct ="1.6.3"
 	openApiVersion = "2.7.0"
+	mockitoVersion="5.17.0"
 }
 
 dependencies {
@@ -45,8 +46,24 @@ dependencies {
 	implementation "org.mapstruct:mapstruct:${mapStruct}"
 
 	annotationProcessor "org.mapstruct:mapstruct-processor:${mapStruct}"
+
+	testImplementation "org.mockito:mockito-core:${mockitoVersion}"
+
+	testImplementation "org.mockito:mockito-junit-jupiter:${mockitoVersion}"
+
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+	finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+	dependsOn test
+	reports {
+		xml.required = true
+		csv.required = false
+		html.outputLocation = layout.buildDirectory.dir('reports/jacoco/html')
+	}
+
 }
