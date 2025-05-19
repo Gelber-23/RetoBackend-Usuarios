@@ -36,6 +36,7 @@ public interface UserResponseMapper {
         return userList.stream()
                 .map(user -> {
                     UserResponse userResponse = new UserResponse();
+                    userResponse.setId(user.getId());
                     userResponse.setName(user.getName());
                     userResponse.setLastName(user.getLastName());
                     userResponse.setDocumentNumber(user.getDocumentNumber());
