@@ -12,15 +12,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-@ConfigurationProperties(prefix = "jwt.access-token")
+
 public class TokenUtils {
 
-    private static String secret;
-    private static Long validitySeconds;
-    
+
+    private final static String ACCESS_TOKEN_SECRET="bXlTZWNyZXRUb2tlblZhcmlhYmxlMzJiYXRlNjQ";
+    private final static Long ACCESS_TOKEN_VALIDITY_SECONDS = 604800L;
+
     
     public static String createToken(String name, String email, String role , Long id) {
-        long expirationTime = validitySeconds * 1_000;
+        long expirationTime = ACCESS_TOKEN_VALIDITY_SECONDS * 1_000;
         Date expirationDate = new Date(System.currentTimeMillis() + expirationTime);
 
         Map<String, Object> extra = new HashMap<>();
@@ -32,14 +33,14 @@ public class TokenUtils {
                 .setSubject(email)
                 .setExpiration(expirationDate)
                 .addClaims(extra)
-                .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .signWith(Keys.hmacShaKeyFor(ACCESS_TOKEN_SECRET.getBytes()))
                 .compact();
     }
 
     public static UsernamePasswordAuthenticationToken getAuthentication(String token) {
         try {
             Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(secret.getBytes())
+                    .setSigningKey(ACCESS_TOKEN_SECRET.getBytes())
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
@@ -57,7 +58,7 @@ public class TokenUtils {
     public static String getEmail(String token){
         try {
             Claims claims  = Jwts.parserBuilder()
-                    .setSigningKey(secret.getBytes())
+                    .setSigningKey(ACCESS_TOKEN_SECRET.getBytes())
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
@@ -72,7 +73,7 @@ public class TokenUtils {
     public static Long getAuthenticatedUserId(String token){
         try {
             Claims claims  = Jwts.parserBuilder()
-                    .setSigningKey(secret.getBytes())
+                    .setSigningKey(ACCESS_TOKEN_SECRET.getBytes())
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
