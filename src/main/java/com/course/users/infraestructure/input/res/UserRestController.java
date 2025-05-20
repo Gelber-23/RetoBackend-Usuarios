@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +26,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserRestController {
 
-
+    private static final String ROLE_ADMIN = "hasRole('1')";
+    private static final String ROLES_ADMIN_OWNER = "hasAnyRole('1','2')";
     private final IUserHandler userHandler;
 
 
@@ -35,6 +37,7 @@ public class UserRestController {
             @ApiResponse(responseCode = "400", description = "Validation errors", content = @Content)
     })
     @PostMapping()
+    @PreAuthorize(ROLE_ADMIN)
     public ResponseEntity<Void> saveUser (@Valid @RequestBody UserRequest userRequest) {
         userHandler.saveUser(userRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -46,6 +49,7 @@ public class UserRestController {
             @ApiResponse(responseCode = "400", description = "Validation errors", content = @Content)
     })
     @GetMapping("{id}")
+    @PreAuthorize(ROLES_ADMIN_OWNER)
     public ResponseEntity<UserResponse> getUserById(@PathVariable(value = "id") Long id) {
         return  ResponseEntity.ok(userHandler.getUserById(id));
     }
@@ -58,6 +62,7 @@ public class UserRestController {
             @ApiResponse(responseCode = "404", description = "No data found", content = @Content)
     })
     @GetMapping()
+    @PreAuthorize(ROLES_ADMIN_OWNER)
     public ResponseEntity<List<UserResponse>> getAllUsers(){
         return ResponseEntity.ok(userHandler.getAllUsers());
     }
@@ -70,6 +75,7 @@ public class UserRestController {
             @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
     })
     @DeleteMapping("{id}")
+    @PreAuthorize(ROLE_ADMIN)
     public ResponseEntity<Void> deleteUserById(@PathVariable(value = "id")Long id){
         userHandler.deleteUserById(id);
         return new ResponseEntity<>(HttpStatus.OK);
