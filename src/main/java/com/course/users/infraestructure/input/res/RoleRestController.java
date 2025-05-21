@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class RoleRestController {
             @ApiResponse(responseCode = "400", description = "Validation errors", content = @Content)
     })
     @PostMapping()
+    @PreAuthorize("@permissionService.isAdmin(authentication)")
     public ResponseEntity<Void> saveRole (@Valid @RequestBody RoleRequest roleRequest) {
         roleHandler.saveRole(roleRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -44,6 +46,7 @@ public class RoleRestController {
             @ApiResponse(responseCode = "400", description = "Validation errors", content = @Content)
     })
     @GetMapping("{id}")
+    @PreAuthorize("@permissionService.isAdmin(authentication)")
     public ResponseEntity<RoleResponse> getRoleById(@PathVariable(value = "id") int id) {
         return  ResponseEntity.ok(roleHandler.getRoleById(id));
     }
@@ -56,6 +59,7 @@ public class RoleRestController {
             @ApiResponse(responseCode = "404", description = "No data found", content = @Content)
     })
     @GetMapping()
+    @PreAuthorize("@permissionService.isAdmin(authentication)")
     public ResponseEntity<List<RoleResponse>> getAllRoles(){
         return ResponseEntity.ok(roleHandler.getAllRoles());
     }
@@ -68,6 +72,7 @@ public class RoleRestController {
             @ApiResponse(responseCode = "404", description = "Role not found", content = @Content)
     })
     @DeleteMapping("{id}")
+    @PreAuthorize("@permissionService.isAdmin(authentication)")
     public ResponseEntity<Void> deleteRoleById(@PathVariable(value = "id")int id){
         roleHandler.deleteRoleById(id);
         return new ResponseEntity<>(HttpStatus.OK);

@@ -1,5 +1,6 @@
 package com.course.users.infraestructure.input.res;
 
+import com.course.users.application.dto.request.UserEmployeeRequest;
 import com.course.users.application.dto.request.UserRequest;
 import com.course.users.application.dto.response.UserResponse;
 import com.course.users.application.handler.IUserHandler;
@@ -26,8 +27,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserRestController {
 
-    private static final String ROLE_ADMIN = "hasRole('1')";
-    private static final String ROLES_ADMIN_OWNER = "hasAnyRole('1','2')";
     private final IUserHandler userHandler;
 
 
@@ -37,9 +36,21 @@ public class UserRestController {
             @ApiResponse(responseCode = "400", description = "Validation errors", content = @Content)
     })
     @PostMapping()
-    @PreAuthorize(ROLE_ADMIN)
+    @PreAuthorize("@permissionService.isAdmin(authentication)")
     public ResponseEntity<Void> saveUser (@Valid @RequestBody UserRequest userRequest) {
         userHandler.saveUser(userRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @Operation(summary = "Add a new user employee")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "User created", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Validation errors", content = @Content)
+    })
+    @PostMapping("createEmployee")
+    @PreAuthorize("@permissionService.isOwner(authentication)")
+    public ResponseEntity<Void> saveUserEmployee (@Valid @RequestBody UserEmployeeRequest userEmployeeRequest) {
+        userHandler.saveUserEmployee(userEmployeeRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -49,7 +60,7 @@ public class UserRestController {
             @ApiResponse(responseCode = "400", description = "Validation errors", content = @Content)
     })
     @GetMapping("{id}")
-    @PreAuthorize(ROLES_ADMIN_OWNER)
+    @PreAuthorize("@permissionService.isAdminOrOwner(authentication)")
     public ResponseEntity<UserResponse> getUserById(@PathVariable(value = "id") Long id) {
         return  ResponseEntity.ok(userHandler.getUserById(id));
     }
@@ -62,7 +73,7 @@ public class UserRestController {
             @ApiResponse(responseCode = "404", description = "No data found", content = @Content)
     })
     @GetMapping()
-    @PreAuthorize(ROLES_ADMIN_OWNER)
+    @PreAuthorize("@permissionService.isAdmin(authentication)")
     public ResponseEntity<List<UserResponse>> getAllUsers(){
         return ResponseEntity.ok(userHandler.getAllUsers());
     }
@@ -75,7 +86,7 @@ public class UserRestController {
             @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
     })
     @DeleteMapping("{id}")
-    @PreAuthorize(ROLE_ADMIN)
+    @PreAuthorize("@permissionService.isAdmin(authentication)")
     public ResponseEntity<Void> deleteUserById(@PathVariable(value = "id")Long id){
         userHandler.deleteUserById(id);
         return new ResponseEntity<>(HttpStatus.OK);
