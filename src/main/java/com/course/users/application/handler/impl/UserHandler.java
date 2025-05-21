@@ -1,9 +1,11 @@
 package com.course.users.application.handler.impl;
 
+import com.course.users.application.dto.request.UserEmployeeRequest;
 import com.course.users.application.dto.request.UserRequest;
 import com.course.users.application.dto.response.UserResponse;
 import com.course.users.application.handler.IUserHandler;
 import com.course.users.application.mapper.RoleDtoMapper;
+import com.course.users.application.mapper.request.IUserEmployeeRequestMapper;
 import com.course.users.application.mapper.request.UserRequestMapper;
 import com.course.users.application.mapper.response.UserResponseMapper;
 import com.course.users.domain.api.IRoleServicePort;
@@ -26,6 +28,7 @@ public class UserHandler implements IUserHandler {
     private final IUserServicePort userServicePort;
     private final IRoleServicePort roleServicePort;
     private final UserRequestMapper userRequestMapper;
+    private final IUserEmployeeRequestMapper userEmployeeRequestMapper;
     private final UserResponseMapper userResponseMapper;
     private final RoleDtoMapper roleDtoMapper;
     private final PasswordEncoder passwordEncoder;
@@ -35,6 +38,14 @@ public class UserHandler implements IUserHandler {
         String encryptedPassword = passwordEncoder.encode(userRequest.getPassword());
         userRequest.setPassword(encryptedPassword);
         User user = userRequestMapper.toUser(userRequest);
+        userServicePort.saveUser(user);
+    }
+
+    @Override
+    public void saveUserEmployee(UserEmployeeRequest userEmployeeRequest) {
+        String encryptedPassword = passwordEncoder.encode(userEmployeeRequest.getPassword());
+        userEmployeeRequest.setPassword(encryptedPassword);
+        User user = userEmployeeRequestMapper.toUser(userEmployeeRequest);
         userServicePort.saveUser(user);
     }
 
