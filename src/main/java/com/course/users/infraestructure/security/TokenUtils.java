@@ -41,13 +41,13 @@ public class TokenUtils {
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-            String email = claims.getSubject();
-
+            //String email = claims.getSubject();
+            Long id = claims.get("id", long.class);
             String role = claims.get("role", String.class);
             List<GrantedAuthority> authorities = List.of(
                     new SimpleGrantedAuthority(role)
             );
-            return new UsernamePasswordAuthenticationToken(email, null, authorities);
+            return new UsernamePasswordAuthenticationToken(id, null, authorities);
 
         } catch (JwtException e) {
             return null;
