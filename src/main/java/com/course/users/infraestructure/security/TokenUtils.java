@@ -4,22 +4,19 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public class TokenUtils {
 
+    private static final String ACCESS_TOKEN_SECRET="bXlTZWNyZXRUb2tlblZhcmlhYmxlMzJiYXRlNjQ";
+    private static final Long ACCESS_TOKEN_VALIDITY_SECONDS = 604800L;
 
-    private final static String ACCESS_TOKEN_SECRET="bXlTZWNyZXRUb2tlblZhcmlhYmxlMzJiYXRlNjQ";
-    private final static Long ACCESS_TOKEN_VALIDITY_SECONDS = 604800L;
 
-    
     public static String createToken(String name, String email, String role , Long id) {
         long expirationTime = ACCESS_TOKEN_VALIDITY_SECONDS * 1_000;
         Date expirationDate = new Date(System.currentTimeMillis() + expirationTime);
@@ -45,7 +42,12 @@ public class TokenUtils {
                     .parseClaimsJws(token)
                     .getBody();
             String email = claims.getSubject();
-            return new UsernamePasswordAuthenticationToken(email, null, Collections.emptyList());
+
+            String role = claims.get("role", String.class);
+            List<GrantedAuthority> authorities = List.of(
+                    new SimpleGrantedAuthority(role)
+            );
+            return new UsernamePasswordAuthenticationToken(email, null, authorities);
 
         } catch (JwtException e) {
             return null;
@@ -64,21 +66,6 @@ public class TokenUtils {
                     .getBody();
 
             return  claims.getSubject();
-
-        }catch (JwtException e){
-            return  null;
-        }
-    }
-
-    public static Long getAuthenticatedUserId(String token){
-        try {
-            Claims claims  = Jwts.parserBuilder()
-                    .setSigningKey(ACCESS_TOKEN_SECRET.getBytes())
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-
-            return claims.get("id", Long.class);
 
         }catch (JwtException e){
             return  null;
