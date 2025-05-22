@@ -3,6 +3,7 @@ package com.course.users.infraestructure.input.res;
 import com.course.users.application.dto.request.RoleRequest;
 import com.course.users.application.dto.response.RoleResponse;
 import com.course.users.application.handler.IRoleHandler;
+import com.course.users.domain.utils.constants.OpenApiConstants;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -21,17 +22,17 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/roles/")
-@Tag(name = "ROLES", description = "Endpoints for roles")
+@Tag(name = OpenApiConstants.TITLE_ROLE_REST, description =OpenApiConstants.TITLE_DESCRIPTION_ROLE_REST)
 @RequiredArgsConstructor
 public class RoleRestController {
 
     private final IRoleHandler roleHandler;
 
 
-    @Operation(summary = "Add a new role")
+    @Operation(summary = OpenApiConstants.NEW_ROLE_TITLE)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Role created", content = @Content),
-            @ApiResponse(responseCode = "400", description = "Validation errors", content = @Content)
+            @ApiResponse(responseCode = "201", description = OpenApiConstants.NEW_ROLE_CREATED, content = @Content),
+            @ApiResponse(responseCode = "400", description = OpenApiConstants.VALIDATIONS_ERRORS_MESSAGE, content = @Content)
     })
     @PostMapping()
     @PreAuthorize("@permissionService.isAdmin(authentication)")
@@ -40,10 +41,10 @@ public class RoleRestController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @Operation(summary = "Get role by ID")
+    @Operation(summary =  OpenApiConstants.GET_ROLE_TITLE)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Role found", content = @Content),
-            @ApiResponse(responseCode = "400", description = "Validation errors", content = @Content)
+            @ApiResponse(responseCode = "200", description =  OpenApiConstants.GET_ROLE_MESSAGE, content = @Content),
+            @ApiResponse(responseCode = "400", description =  OpenApiConstants.VALIDATIONS_ERRORS_MESSAGE, content = @Content)
     })
     @GetMapping("{id}")
     @PreAuthorize("@permissionService.isAdmin(authentication)")
@@ -51,12 +52,12 @@ public class RoleRestController {
         return  ResponseEntity.ok(roleHandler.getRoleById(id));
     }
 
-    @Operation(summary = "Get all roles")
+    @Operation(summary =  OpenApiConstants.GET_ALL_ROLES_TITLE)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "All roles returned",
+            @ApiResponse(responseCode = "200", description =  OpenApiConstants.GET_ALL_ROLES_MESSAGE,
                     content = @Content(mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = RoleResponse.class)))),
-            @ApiResponse(responseCode = "404", description = "No data found", content = @Content)
+            @ApiResponse(responseCode = "404", description =  OpenApiConstants.NO_DATA_MESSAGE, content = @Content)
     })
     @GetMapping()
     @PreAuthorize("@permissionService.isAdmin(authentication)")
@@ -66,10 +67,10 @@ public class RoleRestController {
 
 
 
-    @Operation(summary = "Delete role by ID")
+    @Operation(summary =OpenApiConstants.DELETE_ROLE_TITLE)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Role deleted", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Role not found", content = @Content)
+            @ApiResponse(responseCode = "200", description =OpenApiConstants.DELETE_ROLE_MESSAGE, content = @Content),
+            @ApiResponse(responseCode = "404", description = OpenApiConstants.NO_DATA_MESSAGE, content = @Content)
     })
     @DeleteMapping("{id}")
     @PreAuthorize("@permissionService.isAdmin(authentication)")

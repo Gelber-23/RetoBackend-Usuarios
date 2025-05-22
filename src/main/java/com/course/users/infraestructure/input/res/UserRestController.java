@@ -1,10 +1,12 @@
 package com.course.users.infraestructure.input.res;
 
+import com.course.users.application.dto.request.UserClientRequest;
 import com.course.users.application.dto.request.UserEmployeeRequest;
 import com.course.users.application.dto.request.UserRequest;
 import com.course.users.application.dto.response.UserResponse;
 import com.course.users.application.handler.IUserHandler;
 
+import com.course.users.domain.utils.constants.OpenApiConstants;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,17 +25,17 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users/")
-@Tag(name = "USERS", description = "Endpoints for users")
+@Tag(name = OpenApiConstants.TITLE_USERS_REST, description = OpenApiConstants.TITLE_DESCRIPTION_USERS_REST)
 @RequiredArgsConstructor
 public class UserRestController {
 
     private final IUserHandler userHandler;
 
 
-    @Operation(summary = "Add a new user")
+    @Operation(summary =  OpenApiConstants.NEW_USER_TITLE)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User created", content = @Content),
-            @ApiResponse(responseCode = "400", description = "Validation errors", content = @Content)
+            @ApiResponse(responseCode = "201", description = OpenApiConstants.NEW_USER_CREATED, content = @Content),
+            @ApiResponse(responseCode = "400", description =  OpenApiConstants.VALIDATIONS_ERRORS_MESSAGE, content = @Content)
     })
     @PostMapping()
     @PreAuthorize("@permissionService.isAdmin(authentication)")
@@ -42,10 +44,10 @@ public class UserRestController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @Operation(summary = "Add a new user employee")
+    @Operation(summary = OpenApiConstants.NEW_EMPLOYEE_TITLE)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User created", content = @Content),
-            @ApiResponse(responseCode = "400", description = "Validation errors", content = @Content)
+            @ApiResponse(responseCode = "201", description = OpenApiConstants.NEW_USER_CREATED, content = @Content),
+            @ApiResponse(responseCode = "400", description =OpenApiConstants.VALIDATIONS_ERRORS_MESSAGE, content = @Content)
     })
     @PostMapping("createEmployee")
     @PreAuthorize("@permissionService.isOwner(authentication)")
@@ -54,10 +56,23 @@ public class UserRestController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @Operation(summary = "Get user by ID")
+    @Operation(summary = OpenApiConstants.NEW_CLIENT_TITLE)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User found", content = @Content),
-            @ApiResponse(responseCode = "400", description = "Validation errors", content = @Content)
+            @ApiResponse(responseCode = "201", description = OpenApiConstants.NEW_USER_CREATED, content = @Content),
+            @ApiResponse(responseCode = "400", description = OpenApiConstants.VALIDATIONS_ERRORS_MESSAGE, content = @Content)
+    })
+    @PostMapping("CreateClient")
+    public ResponseEntity<Void> saveUserClient (@Valid @RequestBody UserClientRequest userClientRequest) {
+        userHandler.saveUserClient(userClientRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+
+
+    @Operation(summary =  OpenApiConstants.GET_USER_TITLE)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description =  OpenApiConstants.GET_USER_MESSAGE, content = @Content),
+            @ApiResponse(responseCode = "400", description =  OpenApiConstants.VALIDATIONS_ERRORS_MESSAGE, content = @Content)
     })
     @GetMapping("{id}")
     @PreAuthorize("@permissionService.isAdminOrOwner(authentication)")
@@ -65,12 +80,12 @@ public class UserRestController {
         return  ResponseEntity.ok(userHandler.getUserById(id));
     }
 
-    @Operation(summary = "Get all users")
+    @Operation(summary =OpenApiConstants.GET_ALL_USER_TITLE)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "All users returned",
+            @ApiResponse(responseCode = "200", description = OpenApiConstants.GET_ALL_USER_MESSAGE,
                     content = @Content(mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = UserResponse.class)))),
-            @ApiResponse(responseCode = "404", description = "No data found", content = @Content)
+            @ApiResponse(responseCode = "404", description = OpenApiConstants.NO_DATA_MESSAGE, content = @Content)
     })
     @GetMapping()
     @PreAuthorize("@permissionService.isAdmin(authentication)")
@@ -80,10 +95,10 @@ public class UserRestController {
 
 
 
-    @Operation(summary = "Delete user by ID")
+    @Operation(summary = OpenApiConstants.DELETE_USER_TITLE)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User deleted", content = @Content),
-            @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
+            @ApiResponse(responseCode = "200", description =  OpenApiConstants.DELETE_USER_MESSAGE, content = @Content),
+            @ApiResponse(responseCode = "404", description =  OpenApiConstants.NO_DATA_MESSAGE, content = @Content)
     })
     @DeleteMapping("{id}")
     @PreAuthorize("@permissionService.isAdmin(authentication)")

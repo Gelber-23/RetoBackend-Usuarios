@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class UserEmployeeRequest {
+public class UserClientRequest {
 
     @NotBlank(message = DtoConstants.FIELD_REQUIRED)
     @Size(min = 2, message =  DtoConstants.FIELD_MIN_2_SIZE_REQUIRED)
@@ -31,9 +31,10 @@ public class UserEmployeeRequest {
     @Pattern(regexp =DtoConstants.PHONE_REGEX, message = DtoConstants.FIELD_PHONE_ERROR_MESSAGE)
     private  String phone;
 
-    @NotNull(message =  DtoConstants.FIELD_REQUIRED)
-    @Adult(message = DtoConstants.FIELD_MUST_BE_MORE_18)
-    private Date birthdate;
+    @NotBlank(message =  DtoConstants.FIELD_REQUIRED)
+    @Email(message = DtoConstants.FIELD_EMAIL_INCORRECT_FORMAT)
+    private String email;
+
 
     @NotBlank(message =  DtoConstants.FIELD_REQUIRED)
     private String password;

@@ -1,6 +1,7 @@
 package com.course.users.application.dto.request;
 
 import com.course.users.application.dto.request.validator.Adult;
+import com.course.users.domain.utils.constants.DtoConstants;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,36 +12,36 @@ import java.util.Date;
 @Setter
 public class UserRequest {
 
-    @NotBlank(message = "Name is required")
-    @Size(min = 2, message = "The name must have at least 2 characters")
+    @NotBlank(message = DtoConstants.FIELD_REQUIRED)
+    @Size(min = 2, message =  DtoConstants.FIELD_MIN_2_SIZE_REQUIRED)
     private String name;
 
-    @NotBlank(message = "Last Name is required")
-    @Size(min = 2, message = "The last name must have at least 2 characters")
+    @NotBlank(message =  DtoConstants.FIELD_REQUIRED)
+    @Size(min = 2, message = DtoConstants.FIELD_MIN_2_SIZE_REQUIRED)
     private String lastName;
 
 
-    @NotBlank(message = "Document is required")
-    @Size(min = 7, max = 10, message = "The document must have between 7 and 10 characters")
-    @Pattern(regexp = "^\\d+$", message = "The document must only contain numbers")
+    @NotBlank(message =  DtoConstants.FIELD_REQUIRED)
+    @Size(min = 7, max = 10, message = DtoConstants.FIELD_BETWEEN_7_10_REQUIRED)
+    @Pattern(regexp = DtoConstants.ONLY_NUMBERS_REGEX, message = DtoConstants.FIELD_ONLY_NUMBER_REQUIRED)
     private String documentNumber;
 
 
-    @NotBlank(message = "Phone is required")
-    @Pattern(regexp = "^\\+?\\d{10,18}$", message = "The phone number must contain only digits and can start with '+' and must contain between 10 and 18 characters.")
+    @NotBlank(message = DtoConstants.FIELD_REQUIRED)
+    @Pattern(regexp =DtoConstants.PHONE_REGEX, message = DtoConstants.FIELD_PHONE_ERROR_MESSAGE)
     private  String phone;
 
-    @NotNull(message = "Birth Date is required")
-    @Adult(message = "Must be at least 18 years old")
+    @NotNull(message =  DtoConstants.FIELD_REQUIRED)
+    @Adult(message = DtoConstants.FIELD_MUST_BE_MORE_18)
     private Date birthdate;
 
-    @NotBlank(message = "Email is required")
-    @Email(message = "The email is not in a valid format")
+    @NotBlank(message =  DtoConstants.FIELD_REQUIRED)
+    @Email(message = DtoConstants.FIELD_EMAIL_INCORRECT_FORMAT)
     private String email;
 
 
-    @NotBlank(message = "Password is required")
+    @NotBlank(message =  DtoConstants.FIELD_REQUIRED)
     private String password;
-
+    @NotNull(message =  DtoConstants.FIELD_REQUIRED)
     private int rol;
 }

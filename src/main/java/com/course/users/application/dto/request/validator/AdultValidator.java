@@ -20,6 +20,7 @@ public class AdultValidator  implements ConstraintValidator<Adult, Date> {
                 .toLocalDate();
         LocalDate today = LocalDate.now();
         long years = ChronoUnit.YEARS.between(birthDate, today);
+        //Cambiar a constante
         return years >= 18;
     }
 }

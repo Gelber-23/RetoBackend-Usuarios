@@ -1,10 +1,12 @@
 package com.course.users.application.handler.impl;
 
+import com.course.users.application.dto.request.UserClientRequest;
 import com.course.users.application.dto.request.UserEmployeeRequest;
 import com.course.users.application.dto.request.UserRequest;
 import com.course.users.application.dto.response.UserResponse;
 import com.course.users.application.handler.IUserHandler;
 import com.course.users.application.mapper.RoleDtoMapper;
+import com.course.users.application.mapper.request.IUserClientRequestMapper;
 import com.course.users.application.mapper.request.IUserEmployeeRequestMapper;
 import com.course.users.application.mapper.request.UserRequestMapper;
 import com.course.users.application.mapper.response.UserResponseMapper;
@@ -12,7 +14,6 @@ import com.course.users.domain.api.IRoleServicePort;
 import com.course.users.domain.api.IUserServicePort;
 import com.course.users.domain.model.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,24 +30,23 @@ public class UserHandler implements IUserHandler {
     private final IRoleServicePort roleServicePort;
     private final UserRequestMapper userRequestMapper;
     private final IUserEmployeeRequestMapper userEmployeeRequestMapper;
+    private final IUserClientRequestMapper userClientRequestMapper;
     private final UserResponseMapper userResponseMapper;
     private final RoleDtoMapper roleDtoMapper;
-    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void saveUser(UserRequest userRequest) {
-        String encryptedPassword = passwordEncoder.encode(userRequest.getPassword());
-        userRequest.setPassword(encryptedPassword);
-        User user = userRequestMapper.toUser(userRequest);
-        userServicePort.saveUser(user);
+        userServicePort.saveUser(userRequestMapper.toUser(userRequest));
     }
 
     @Override
     public void saveUserEmployee(UserEmployeeRequest userEmployeeRequest) {
-        String encryptedPassword = passwordEncoder.encode(userEmployeeRequest.getPassword());
-        userEmployeeRequest.setPassword(encryptedPassword);
-        User user = userEmployeeRequestMapper.toUser(userEmployeeRequest);
-        userServicePort.saveUser(user);
+        userServicePort.saveEmployee( userEmployeeRequestMapper.toUser(userEmployeeRequest));
+    }
+
+    @Override
+    public void saveUserClient(UserClientRequest userClientRequest) {
+        userServicePort.saveClient(userClientRequestMapper.toUser(userClientRequest));
     }
 
     @Override
