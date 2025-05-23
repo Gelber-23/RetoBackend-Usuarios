@@ -1,9 +1,7 @@
 package com.course.users.application.dto.response;
 
-import com.course.users.application.dto.RoleDto;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.Date;
 
 @Getter
@@ -24,5 +22,5 @@ public class UserResponse {
     private String email;
 
 
-    private RoleDto rol;
+    private RoleResponse rol;
 }

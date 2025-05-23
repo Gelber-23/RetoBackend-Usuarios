@@ -1,32 +1,32 @@
 package com.course.users.application.handler.impl;
 
-import com.course.users.application.dto.RoleDto;
+
+import com.course.users.application.dto.request.UserClientRequest;
+import com.course.users.application.dto.request.UserEmployeeRequest;
 import com.course.users.application.dto.request.UserRequest;
 import com.course.users.application.dto.response.UserResponse;
-import com.course.users.application.mapper.RoleDtoMapper;
+import com.course.users.application.mapper.request.IUserClientRequestMapper;
+import com.course.users.application.mapper.request.IUserEmployeeRequestMapper;
 import com.course.users.application.mapper.request.UserRequestMapper;
 import com.course.users.application.mapper.response.UserResponseMapper;
 import com.course.users.domain.api.IRoleServicePort;
 import com.course.users.domain.api.IUserServicePort;
 import com.course.users.domain.model.Role;
 import com.course.users.domain.model.User;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class UserHandlerTest {
+
     @Mock
     IUserServicePort userServicePort;
     @Mock
@@ -34,82 +34,93 @@ class UserHandlerTest {
     @Mock
     UserRequestMapper userRequestMapper;
     @Mock
+    IUserEmployeeRequestMapper userEmployeeRequestMapper;
+    @Mock
+    IUserClientRequestMapper userClientRequestMapper;
+    @Mock
     UserResponseMapper userResponseMapper;
-    @Mock
-    RoleDtoMapper roleDtoMapper;
-    @Mock
-    PasswordEncoder passwordEncoder;
+
     @InjectMocks
     UserHandler userHandler;
 
-    private UserRequest userRequest;
-    private User user;
-    private Role role;
-    private RoleDto roleDto;
-    private UserResponse userResponse;
-
-    @BeforeEach
-    void setUp() {
-        userRequest = new UserRequest();
-        userRequest.setPassword("raw");
-        user = new User();
-        role = new Role();
-        role.setId(1);
-        roleDto = new RoleDto();
-        roleDto.setName("R");
-        userResponse = new UserResponse();
-    }
 
     @Test
-    void saveUser_success_invokesServiceWithEncodedPassword() {
-        when(passwordEncoder.encode("raw")).thenReturn("enc");
-        when(userRequestMapper.toUser(any())).thenReturn(user);
-        userHandler.saveUser(userRequest);
-        assertEquals("enc", userRequest.getPassword());
-        verify(passwordEncoder).encode("raw");
-        verify(userRequestMapper).toUser(userRequest);
+    void saveUser_callsServiceSaveUser() {
+        UserRequest req = mock(UserRequest.class);
+        User user = mock(User.class);
+        when(userRequestMapper.toUser(req)).thenReturn(user);
+
+        userHandler.saveUser(req);
+
         verify(userServicePort).saveUser(user);
     }
 
     @Test
-    void getUserById_success_returnsMappedResponse() {
-        when(userServicePort.getUserById(2L)).thenReturn(user);
-        when(roleServicePort.getRoleById(user.getIdRole())).thenReturn(role);
-        when(roleDtoMapper.toDto(role)).thenReturn(roleDto);
-        when(userResponseMapper.toResponse(user, roleDto)).thenReturn(userResponse);
+    void saveUserEmployee_callsServiceSaveEmployee() {
+        UserEmployeeRequest req = mock(UserEmployeeRequest.class);
+        User user = mock(User.class);
+        when(userEmployeeRequestMapper.toUser(req)).thenReturn(user);
 
-        UserResponse result = userHandler.getUserById(2L);
-        assertSame(userResponse, result);
-        verify(userServicePort).getUserById(2L);
-        verify(roleServicePort).getRoleById(user.getIdRole());
-        verify(userResponseMapper).toResponse(user, roleDto);
+        userHandler.saveUserEmployee(req);
+
+        verify(userServicePort).saveEmployee(user);
     }
 
     @Test
-    void getAllUsers_success_returnsList() {
-        List<User> users = List.of(user);
-        List<Role> roles = List.of(role);
-        List<UserResponse> userResponseList = List.of(userResponse);
+    void saveUserClient_callsServiceSaveClient() {
+        UserClientRequest req = mock(UserClientRequest.class);
+        User user = mock(User.class);
+        when(userClientRequestMapper.toUser(req)).thenReturn(user);
+
+        userHandler.saveUserClient(req);
+
+        verify(userServicePort).saveClient(user);
+    }
+
+    @Test
+    void getUserById_returnsMappedResponse() {
+        Long id = 1L;
+        User user = mock(User.class);
+        when(user.getIdRole()).thenReturn(2);
+        UserResponse response = mock(UserResponse.class);
+
+        when(userServicePort.getUserById(id)).thenReturn(user);
+        when(roleServicePort.getRoleById(2)).thenReturn(mock(Role.class)); // role object
+        when(userResponseMapper.toResponse(any(), any())).thenReturn(response);
+
+        UserResponse result = userHandler.getUserById(id);
+
+        verify(userServicePort).getUserById(id);
+        verify(roleServicePort).getRoleById(2);
+        verify(userResponseMapper).toResponse(user, roleServicePort.getRoleById(2));
+        assertSame(response, result);
+    }
+
+    @Test
+    void getAllUsers_returnsMappedResponseList() {
+        List<User> users = Collections.singletonList(mock(User.class));
+        List<Role> roles = Collections.singletonList(mock(Role.class));
+        List<UserResponse> responseList = Collections.singletonList(mock(UserResponse.class));
+
         when(userServicePort.getAllUsers()).thenReturn(users);
         when(roleServicePort.getAllRoles()).thenReturn(roles);
-        when(userResponseMapper.toResponseList(users, roles)).thenReturn(userResponseList);
+        when(userResponseMapper.toResponseList(users, roles)).thenReturn(responseList);
 
         List<UserResponse> result = userHandler.getAllUsers();
-        assertEquals(userResponseList, result);
+
         verify(userServicePort).getAllUsers();
         verify(roleServicePort).getAllRoles();
+        verify(userResponseMapper).toResponseList(users, roles);
+        assertSame(responseList, result);
     }
 
     @Test
-    void deleteUserById_success_invokesService() {
-        userHandler.deleteUserById(3L);
-        verify(userServicePort).deleteUserById(3L);
-    }
+    void deleteUserById_callsServiceDelete() {
+        Long id = 1L;
 
-    @Test
-    void saveUser_mapperThrows_exceptionBubbles() {
-        when(passwordEncoder.encode(any())).thenReturn("enc");
-        when(userRequestMapper.toUser(any())).thenThrow(new RuntimeException("fail"));
-        assertThrows(RuntimeException.class, () -> userHandler.saveUser(userRequest));
+        userHandler.deleteUserById(id);
+
+        verify(userServicePort).deleteUserById(id);
     }
+  
 }

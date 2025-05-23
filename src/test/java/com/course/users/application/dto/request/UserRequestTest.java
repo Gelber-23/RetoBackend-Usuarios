@@ -58,4 +58,5 @@ class UserRequestTest {
         assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("email")));
         assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
     }
+
 }
