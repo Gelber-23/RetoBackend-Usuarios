@@ -5,7 +5,6 @@ import com.course.users.application.dto.request.UserEmployeeRequest;
 import com.course.users.application.dto.request.UserRequest;
 import com.course.users.application.dto.response.UserResponse;
 import com.course.users.application.handler.IUserHandler;
-import com.course.users.application.mapper.RoleDtoMapper;
 import com.course.users.application.mapper.request.IUserClientRequestMapper;
 import com.course.users.application.mapper.request.IUserEmployeeRequestMapper;
 import com.course.users.application.mapper.request.UserRequestMapper;
@@ -32,7 +31,6 @@ public class UserHandler implements IUserHandler {
     private final IUserEmployeeRequestMapper userEmployeeRequestMapper;
     private final IUserClientRequestMapper userClientRequestMapper;
     private final UserResponseMapper userResponseMapper;
-    private final RoleDtoMapper roleDtoMapper;
 
     @Override
     public void saveUser(UserRequest userRequest) {
@@ -52,7 +50,7 @@ public class UserHandler implements IUserHandler {
     @Override
     public UserResponse getUserById(Long id) {
         User user = userServicePort.getUserById(id);
-        return userResponseMapper.toResponse(user, roleDtoMapper.toDto(roleServicePort.getRoleById(user.getIdRole())) );
+        return userResponseMapper.toResponse(user, roleServicePort.getRoleById(user.getIdRole()) );
 
     }
 

@@ -78,37 +78,24 @@ public class UserUseCase implements IUserServicePort {
 
 
         String doc = user.getDocumentNumber();
-        if (doc == null || doc.isBlank()) {
-            errors.add(DtoConstants.FIELD_REQUIRED);
-        } else {
-            if (!Pattern.matches(DtoConstants.ONLY_NUMBERS_REGEX, doc)) {
-                errors.add(DtoConstants.FIELD_ONLY_NUMBER_REQUIRED);
-            }
+        if (doc == null || doc.isBlank() || !Pattern.matches(DtoConstants.ONLY_NUMBERS_REGEX, doc)) {
+            errors.add(DtoConstants.FIELD_ONLY_NUMBER_REQUIRED);
         }
 
         String phone = user.getPhone();
-        if (phone == null || phone.isBlank()) {
-            errors.add(DtoConstants.FIELD_REQUIRED);
-        } else if (!Pattern.matches(DtoConstants.PHONE_REGEX, phone)) {
+        if (phone == null || phone.isBlank() || !Pattern.matches(DtoConstants.PHONE_REGEX, phone)) {
             errors.add(DtoConstants.FIELD_PHONE_ERROR_MESSAGE);
         }
 
         if( user.getIdRole() == ValuesConstants.ID_ROLE_OWNER){
             Date birthdate = user.getBirthdate();
-            if (birthdate == null) {
-                errors.add(DtoConstants.FIELD_REQUIRED);
-            } else {
-
-                if ( !utilsPort.isLegal(birthdate)) {
-                    errors.add(DtoConstants.FIELD_MUST_BE_MORE_18);
-                }
+            if (birthdate == null || !utilsPort.isLegal(birthdate)) {
+                errors.add(DtoConstants.FIELD_MUST_BE_MORE_18);
             }
         }
 
         String mail = user.getEmail();
-        if (mail == null || mail.isBlank()) {
-            errors.add(DtoConstants.FIELD_REQUIRED);
-        } else if (!mail.matches(DtoConstants.EMAIL_REGEX)) {
+        if (mail == null || mail.isBlank() || !mail.matches(DtoConstants.EMAIL_REGEX)) {
             errors.add(DtoConstants.FIELD_EMAIL_INCORRECT_FORMAT);
         }
 

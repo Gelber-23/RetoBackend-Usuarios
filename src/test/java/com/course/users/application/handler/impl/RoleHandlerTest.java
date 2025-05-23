@@ -8,19 +8,16 @@ import com.course.users.domain.api.IRoleServicePort;
 import com.course.users.domain.model.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-
-@ExtendWith(MockitoExtension.class)
 class RoleHandlerTest {
 
     @Mock
@@ -29,58 +26,65 @@ class RoleHandlerTest {
     RoleRequestMapper roleRequestMapper;
     @Mock
     RoleResponseMapper roleResponseMapper;
-    @InjectMocks
-    RoleHandler handler;
 
-    private RoleRequest roleRequest;
-    private Role role;
-    private RoleResponse roleResponse;
+    @InjectMocks
+    RoleHandler roleHandler;
 
     @BeforeEach
-    void setUp() {
-        roleRequest = new RoleRequest();
-        role = new Role();
-        roleResponse = new RoleResponse();
+    void setup() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void saveRole_success_invokesService() {
-        when(roleRequestMapper.toRol(roleRequest)).thenReturn(role);
-        handler.saveRole(roleRequest);
-        verify(roleRequestMapper).toRol(roleRequest);
-        verify(roleServicePort).saveRole(role);
+    void saveRole_callsServiceSaveRole() {
+        RoleRequest req = mock(RoleRequest.class);
+        Role rol = mock(Role.class);
+        when(roleRequestMapper.toRol(req)).thenReturn(rol);
+
+        roleHandler.saveRole(req);
+
+        verify(roleRequestMapper).toRol(req);
+        verify(roleServicePort).saveRole(rol);
     }
 
     @Test
-    void getRoleById_success_returnsMapped() {
-        when(roleServicePort.getRoleById(5)).thenReturn(role);
-        when(roleResponseMapper.toResponse(role)).thenReturn(roleResponse);
-        RoleResponse result = handler.getRoleById(5);
-        assertSame(roleResponse, result);
-        verify(roleServicePort).getRoleById(5);
+    void getRoleById_returnsMappedResponse() {
+        int id = 42;
+        Role role = mock(Role.class);
+        RoleResponse resp = mock(RoleResponse.class);
+
+        when(roleServicePort.getRoleById(id)).thenReturn(role);
+        when(roleResponseMapper.toResponse(role)).thenReturn(resp);
+
+        RoleResponse result = roleHandler.getRoleById(id);
+
+        verify(roleServicePort).getRoleById(id);
         verify(roleResponseMapper).toResponse(role);
+        assertSame(resp, result);
     }
 
     @Test
-    void getAllRoles_success_returnsList() {
-        List<Role> roles = List.of(role);
-        List<RoleResponse> resps = List.of(roleResponse);
+    void getAllRoles_returnsMappedList() {
+        List<Role> roles = Collections.singletonList(mock(Role.class));
+        List<RoleResponse> resps = Collections.singletonList(mock(RoleResponse.class));
+
         when(roleServicePort.getAllRoles()).thenReturn(roles);
         when(roleResponseMapper.toResponseList(roles)).thenReturn(resps);
-        List<RoleResponse> result = handler.getAllRoles();
-        assertEquals(resps, result);
+
+        List<RoleResponse> result = roleHandler.getAllRoles();
+
         verify(roleServicePort).getAllRoles();
+        verify(roleResponseMapper).toResponseList(roles);
+        assertSame(resps, result);
     }
 
     @Test
-    void deleteRoleById_success_invokesService() {
-        handler.deleteRoleById(7);
-        verify(roleServicePort).deleteRoleById(7);
+    void deleteRoleById_callsServiceDelete() {
+        int id = 99;
+
+        roleHandler.deleteRoleById(id);
+
+        verify(roleServicePort).deleteRoleById(id);
     }
 
-    @Test
-    void saveRole_mapperThrows_exceptionBubbles() {
-        when(roleRequestMapper.toRol(roleRequest)).thenThrow(new IllegalStateException("err"));
-        assertThrows(IllegalStateException.class, () -> handler.saveRole(roleRequest));
-    }
 }

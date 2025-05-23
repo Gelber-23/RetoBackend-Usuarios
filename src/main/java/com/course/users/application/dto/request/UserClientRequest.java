@@ -1,12 +1,9 @@
 package com.course.users.application.dto.request;
 
-import com.course.users.application.dto.request.validator.Adult;
 import com.course.users.domain.utils.constants.DtoConstants;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Date;
 
 @Getter
 @Setter

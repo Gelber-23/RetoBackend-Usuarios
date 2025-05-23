@@ -1,5 +1,6 @@
 package com.course.users.infraestructure.exceptionhandler;
 
+import com.course.users.domain.exeption.JwtNotCreate;
 import com.course.users.infraestructure.exception.NoDataFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,5 +37,13 @@ public class ControllerAdvisor {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
-
+    @ExceptionHandler(JwtNotCreate.class)
+    public ResponseEntity<Map<String, String>> handleUserNotFound(
+            JwtNotCreate ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Collections.singletonMap(
+                        MESSAGE,
+                        ex.getMessage()
+                ));
+    }
 }

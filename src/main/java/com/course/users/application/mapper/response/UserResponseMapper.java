@@ -1,8 +1,6 @@
 package com.course.users.application.mapper.response;
 
-import com.course.users.application.dto.RoleDto;
 import com.course.users.application.dto.response.UserResponse;
-import com.course.users.application.mapper.RoleDtoMapper;
 import com.course.users.domain.model.Role;
 import com.course.users.domain.model.User;
 import org.mapstruct.Mapper;
@@ -15,11 +13,11 @@ import java.util.List;
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE,
-        uses = {RoleDtoMapper.class} )
+        uses = {RoleResponseMapper.class} )
 
 public interface UserResponseMapper {
 
-    RoleDtoMapper INSTANCE = Mappers.getMapper(RoleDtoMapper.class);
+    RoleResponseMapper INSTANCE = Mappers.getMapper(RoleResponseMapper.class);
 
     @Mapping(target = "id", source = "user.id")
     @Mapping(target = "name", source = "user.name")
@@ -28,9 +26,10 @@ public interface UserResponseMapper {
     @Mapping(target = "phone", source = "user.phone")
     @Mapping(target = "birthdate", source = "user.birthdate")
     @Mapping(target = "email", source = "user.email")
+    @Mapping(target = "rol.id", source = "roleDto.id")
     @Mapping(target = "rol.name", source = "roleDto.name")
     @Mapping(target = "rol.description", source = "roleDto.description")
-    UserResponse toResponse(User user, RoleDto roleDto);
+    UserResponse toResponse(User user, Role roleDto);
 
     default List<UserResponse> toResponseList(List<User> userList, List<Role> roleList) {
         return userList.stream()
@@ -43,7 +42,7 @@ public interface UserResponseMapper {
                     userResponse.setPhone(user.getPhone());
                     userResponse.setBirthdate(user.getBirthdate());
                     userResponse.setEmail(user.getEmail());
-                    userResponse.setRol(INSTANCE.toDto(roleList.stream().filter(role -> role.getId() == user.getIdRole() ).findFirst().orElse(null)));
+                    userResponse.setRol(INSTANCE.toResponse(roleList.stream().filter(role -> role.getId() == user.getIdRole() ).findFirst().orElse(null)));
                     return userResponse;
                 }).toList();
     }

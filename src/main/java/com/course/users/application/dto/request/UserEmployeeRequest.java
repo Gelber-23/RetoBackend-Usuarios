@@ -1,12 +1,11 @@
 package com.course.users.application.dto.request;
 
-import com.course.users.application.dto.request.validator.Adult;
+
 import com.course.users.domain.utils.constants.DtoConstants;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
 
 @Getter
 @Setter
@@ -30,10 +29,6 @@ public class UserEmployeeRequest {
     @NotBlank(message = DtoConstants.FIELD_REQUIRED)
     @Pattern(regexp =DtoConstants.PHONE_REGEX, message = DtoConstants.FIELD_PHONE_ERROR_MESSAGE)
     private  String phone;
-
-    @NotNull(message =  DtoConstants.FIELD_REQUIRED)
-    @Adult(message = DtoConstants.FIELD_MUST_BE_MORE_18)
-    private Date birthdate;
 
     @NotBlank(message =  DtoConstants.FIELD_REQUIRED)
     private String password;

@@ -1,6 +1,5 @@
 package com.course.users.application.dto.request.validator;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -11,13 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AdultValidatorTest {
 
-
-    private AdultValidator validator;
-
-    @BeforeEach
-    void setUp() {
-        validator = new AdultValidator();
-    }
+    private final AdultValidator validator = new AdultValidator();
 
     @Test
     void isValid_nullBirthdate_returnsTrue() {

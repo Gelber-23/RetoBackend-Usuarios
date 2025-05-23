@@ -1,5 +1,7 @@
 package com.course.users.infraestructure.security;
 
+import com.course.users.domain.exeption.JwtNotCreate;
+import com.course.users.domain.utils.constants.ValuesConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -13,8 +15,8 @@ import java.util.*;
 
 public class TokenUtils {
 
-    private static final String ACCESS_TOKEN_SECRET="bXlTZWNyZXRUb2tlblZhcmlhYmxlMzJiYXRlNjQ";
-    private static final Long ACCESS_TOKEN_VALIDITY_SECONDS = 604800L;
+    private static final String ACCESS_TOKEN_SECRET= ValuesConstants.JWT_SECRET_KEY;
+    private static final Long ACCESS_TOKEN_VALIDITY_SECONDS = ValuesConstants.ACCESS_TOKEN_VALIDITY_SECONDS;
 
 
     public static String createToken(String name, String email, String role , Long id) {
@@ -41,8 +43,7 @@ public class TokenUtils {
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-            //String email = claims.getSubject();
-            Long id = claims.get("id", long.class);
+            Long id = claims.get("id", Long.class);
             String role = claims.get("role", String.class);
             List<GrantedAuthority> authorities = List.of(
                     new SimpleGrantedAuthority(role)
@@ -50,7 +51,7 @@ public class TokenUtils {
             return new UsernamePasswordAuthenticationToken(id, null, authorities);
 
         } catch (JwtException e) {
-            return null;
+            throw new JwtNotCreate(e.getCause().toString());
         }
     }
 
@@ -68,7 +69,7 @@ public class TokenUtils {
             return  claims.getSubject();
 
         }catch (JwtException e){
-            return  null;
+            throw new JwtNotCreate(e.getCause().toString());
         }
     }
 
