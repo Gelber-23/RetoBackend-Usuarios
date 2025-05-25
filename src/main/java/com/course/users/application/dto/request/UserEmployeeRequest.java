@@ -34,4 +34,7 @@ public class UserEmployeeRequest {
     private String password;
     @NotNull(message =  DtoConstants.FIELD_REQUIRED)
     private int role;
+
+    @NotNull(message =  DtoConstants.FIELD_REQUIRED)
+    private Long idRestaurant;
 }

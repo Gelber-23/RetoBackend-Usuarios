@@ -29,6 +29,7 @@ public interface UserResponseMapper {
     @Mapping(target = "rol.id", source = "roleDto.id")
     @Mapping(target = "rol.name", source = "roleDto.name")
     @Mapping(target = "rol.description", source = "roleDto.description")
+    @Mapping(target = "idRestaurant", source = "user.idRestaurant")
     UserResponse toResponse(User user, Role roleDto);
 
     default List<UserResponse> toResponseList(List<User> userList, List<Role> roleList) {
@@ -42,6 +43,7 @@ public interface UserResponseMapper {
                     userResponse.setPhone(user.getPhone());
                     userResponse.setBirthdate(user.getBirthdate());
                     userResponse.setEmail(user.getEmail());
+                    userResponse.setIdRestaurant(user.getIdRestaurant());
                     userResponse.setRol(INSTANCE.toResponse(roleList.stream().filter(role -> role.getId() == user.getIdRole() ).findFirst().orElse(null)));
                     return userResponse;
                 }).toList();

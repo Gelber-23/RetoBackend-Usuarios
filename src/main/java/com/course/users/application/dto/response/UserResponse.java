@@ -23,4 +23,5 @@ public class UserResponse {
 
 
     private RoleResponse rol;
+    private Long idRestaurant;
 }

@@ -75,7 +75,6 @@ public class UserRestController {
             @ApiResponse(responseCode = "400", description =  OpenApiConstants.VALIDATIONS_ERRORS_MESSAGE, content = @Content)
     })
     @GetMapping("{id}")
-    @PreAuthorize("@permissionService.isAdminOrOwner(authentication)")
     public ResponseEntity<UserResponse> getUserById(@PathVariable(value = "id") Long id) {
         return  ResponseEntity.ok(userHandler.getUserById(id));
     }

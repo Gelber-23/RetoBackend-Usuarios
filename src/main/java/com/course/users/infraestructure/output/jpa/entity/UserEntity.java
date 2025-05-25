@@ -30,11 +30,10 @@ public class UserEntity {
     private Date birthdate;
     private String email;
     private String password;
-
-
     @ManyToOne
     //@OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "idRole", nullable = true)
     private RoleEntity idRole;
+    private Long idRestaurant;
 
 }
