@@ -14,11 +14,14 @@ public class User {
     private String email;
     private String password;
     private int idRole;
+    private Long idRestaurant;
 
-    public User() {
+
+    public User( ) {
+
     }
 
-    public User(long id, String name, String lastName, String documentNumber, String phone, Date birthdate, String email, String password, int idRole) {
+    public User(long id, String name, String lastName, String documentNumber, String phone, Date birthdate, String email, String password, int idRole, Long idRestaurant) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
@@ -28,6 +31,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.idRole = idRole;
+        this.idRestaurant = idRestaurant;
     }
 
     public long getId() {
@@ -100,5 +104,13 @@ public class User {
 
     public void setIdRole(int idRole) {
         this.idRole = idRole;
+    }
+
+    public Long getIdRestaurant() {
+        return idRestaurant;
+    }
+
+    public void setIdRestaurant(Long idRestaurant) {
+        this.idRestaurant = idRestaurant;
     }
 }

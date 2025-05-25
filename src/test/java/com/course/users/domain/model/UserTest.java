@@ -31,8 +31,9 @@ class UserTest {
         user.setEmail("test@example.com");
         user.setPassword("password");
         user.setIdRole(3);
+        user.setIdRestaurant(0L);
 
-         userConstructor= new User(1L,"Test","New","12332123","123456107",birthdate,"test@example.com","password",3);
+         userConstructor= new User(1L,"Test","New","12332123","123456107",birthdate,"test@example.com","password",3,0L);
     }
 
     @Test
@@ -46,6 +47,7 @@ class UserTest {
         assertEquals("test@example.com", user.getEmail());
         assertEquals("password", user.getPassword());
         assertEquals(3, user.getIdRole());
+        assertEquals(0L, user.getIdRestaurant());
     }
     @Test
     void compareUsers() {
